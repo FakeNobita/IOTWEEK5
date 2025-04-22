@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IOT NPTEL WEEK-5</title>
+    <title>IOT NPTEL WEEK-11</title>
     <style>
         * {
             margin: 0;
@@ -44,6 +44,15 @@
             margin-bottom: 16px;
             color: #333;
         }
+
+        .question-image {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 16px auto;
+            border-radius: 8px;
+        }
+
 
         .options-container {
             display: flex;
@@ -148,7 +157,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>IOT NPTEL WEEK-5</h1>
+        <h1>IOT NPTEL WEEK-11</h1>
         <div id="quiz-container"></div>
         <div class="controls">
             <div id="score" class="score"></div>
@@ -239,6 +248,7 @@ const questions = [
   {
     id: 10,
     question: "What does the following code do? (LED blinking example)",
+    image:"https://github.com/FakeNobita/IOTWEEK5/blob/main/imagess/week5q10.png",
     options: [
       "Blink 3 times with 1000ms ON and 500ms OFF",
       "Blink 3 times with 500ms ON and 500ms OFF",
@@ -306,9 +316,7 @@ const questions = [
 ];
 
 
-
-
-        let selectedAnswers = {};
+let selectedAnswers = {};
         let submitted = false;
 
         function createQuiz() {
@@ -320,6 +328,7 @@ const questions = [
                 
                 questionCard.innerHTML = `
                     <div class="question-text">Q${question.id}. ${question.question}</div>
+                    ${question.image ? `<img src="${question.image}" alt="Image for question ${question.id}" class="question-image">` : ''}
                     <div class="options-container">
                         ${question.options.map((option, index) => `
                             <label class="option" data-question="${question.id}" data-option="${index}">
@@ -336,6 +345,7 @@ const questions = [
                         <div class="explanation">${question.explanation}</div>
                     </div>
                 `;
+
                 
                 quizContainer.appendChild(questionCard);
             });
