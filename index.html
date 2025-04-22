@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IOT NPTEL WEEK-5</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 1px solid #e5e5e5;
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #333;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            padding: 12px;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            background-color: #f8f8f8;
+        }
+
+        .option.selected {
+            border-color: #3b82f6;
+        }
+
+        .option.correct {
+            background-color: #ecfdf5;
+        }
+
+        .option.wrong {
+            background-color: #fef2f2;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 12px;
+        }
+
+        .feedback {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e5e5;
+            display: none;
+        }
+
+        .feedback.visible {
+            display: block;
+        }
+
+        .result-icon {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .result-icon.correct {
+            color: #059669;
+        }
+
+        .result-icon.wrong {
+            color: #dc2626;
+        }
+
+        .explanation {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 24px;
+        }
+
+        .score {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .button {
+            background-color: #3b82f6;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s;
+        }
+
+        .button:hover {
+            background-color: #2563eb;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>IOT NPTEL WEEK-5</h1>
+        <div id="quiz-container"></div>
+        <div class="controls">
+            <div id="score" class="score"></div>
+            <button id="submit-btn" class="button">Submit Answers</button>
+        </div>
+    </div>
+
+    <script>
+const questions = [
+  {
+    id: 1,
+    question: "Which of the following is/are current challenges in IoT?",
+    options: [
+      "Large scale of co-operation",
+      "Global heterogeneity",
+      "Both (a) and (b)",
+      "Neither (a) nor (b)"
+    ],
+    correctAnswer: 2,
+    explanation: "Large scale of co-operation and Global heterogeneity are current challenges in IoT. Lecture 21 @ 03:41."
+  },
+  {
+    id: 2,
+    question: "Interoperability is not a characteristic of a product or system.",
+    options: ["True", "False"],
+    correctAnswer: 1,
+    explanation: "Interoperability is a characteristic of a product or system. Lecture 21 @ 05:51."
+  },
+  {
+    id: 3,
+    question: "Interoperability is required because",
+    options: [
+      "There are different programming languages",
+      "There are different communication protocols",
+      "Both (a) and (b)",
+      "Neither (a) nor (b)"
+    ],
+    correctAnswer: 2,
+    explanation: "Interoperability is needed due to different languages and protocols. Lecture 21 @ 08:30."
+  },
+  {
+    id: 4,
+    question: "Use of different programming languages such as JavaScript, Python, JAVA, and others is an example of heterogeneity in IoT. This brings in the need for interoperability.",
+    options: ["False", "True"],
+    correctAnswer: 1,
+    explanation: "This is an example of heterogeneity. Lecture 21 @ 09:12."
+  },
+  {
+    id: 5,
+    question: "The interoperability between devices and device users in terms of message formats is called Systematic Interoperability.",
+    options: ["True", "False"],
+    correctAnswer: 1,
+    explanation: "It is called Syntactic Interoperability. Lecture 21 @ 17:06."
+  },
+  {
+    id: 6,
+    question: "What is the full form of UMB in IoT interoperability?",
+    options: [
+      "Universal Meta Bridge",
+      "Universal Main Bridge",
+      "Universal Main Bracket",
+      "None of these"
+    ],
+    correctAnswer: 3,
+    explanation: "UMB stands for Universal Middleware Bridge. Lecture 21 @ 22:16."
+  },
+  {
+    id: 7,
+    question: "Arduino is an open-source electronic programmable board.",
+    options: ["True", "False"],
+    correctAnswer: 0,
+    explanation: "Arduino is open-source. Lecture 22 @ 05:17."
+  },
+  {
+    id: 8,
+    question: "Additional electronic circuits are essential to load a program into the Arduino controller board.",
+    options: ["True", "False"],
+    correctAnswer: 1,
+    explanation: "No additional circuits are needed. Lecture 22 @ 05:17."
+  },
+  {
+    id: 9,
+    question: "Arduino UNO has _________ number of Digital I/O pins.",
+    options: ["8", "13", "14", "None of these"],
+    correctAnswer: 2,
+    explanation: "It has 14 digital I/O pins. Lecture 22 @ 07:08."
+  },
+  {
+    id: 10,
+    question: "What does the following code do? (LED blinking example)",
+    options: [
+      "Blink 3 times with 1000ms ON and 500ms OFF",
+      "Blink 3 times with 500ms ON and 500ms OFF",
+      "Blink 3 times with 1000ms ON and 1000ms OFF",
+      "Stay ON continuously"
+    ],
+    correctAnswer: 0,
+    explanation: "Code blinks LED 3 times with 1000ms ON and 500ms OFF."
+  },
+  {
+    id: 11,
+    question: "How many types of loops will you find in Arduino Programming?",
+    options: ["1", "2", "3", "4"],
+    correctAnswer: 2,
+    explanation: "Arduino supports for, while, and do-while loops — 3 in total."
+  },
+  {
+    id: 12,
+    question: "Choose the right option for if/conditional operator.",
+    options: [
+      "Val = (condition)?(Statement 1):(Statement 2)",
+      "Val = (condition)?(Statement 2):(Statement 1)",
+      "Val = (condition):(Statement 1)?(Statement 2)",
+      "Val = (condition):(Statement 2)?(Statement 1)"
+    ],
+    correctAnswer: 0,
+    explanation: "Correct syntax: Val = (condition)?(Statement 1):(Statement 2). Lecture 23 @ 2:01."
+  },
+  {
+    id: 13,
+    question: "What is the purpose of calling dht.begin(); in the setup() function?",
+    options: [
+      "To initialize the Serial Monitor",
+      "To start communication with the DHT sensor",
+      "To set the temperature and humidity values to zero",
+      "To define the data pin for the sensor"
+    ],
+    correctAnswer: 1,
+    explanation: "Starts communication with DHT sensor. Lecture 24 @ 17:25."
+  },
+  {
+    id: 14,
+    question: "What function is used to read the humidity value from the DHT sensor?",
+    options: [
+      "dht.getHumidity()",
+      "dht.readTemp()",
+      "dht.readHumidity()",
+      "dht.getTemperature()"
+    ],
+    correctAnswer: 2,
+    explanation: "Use dht.readHumidity(). Lecture 24 @ 17:25."
+  },
+  {
+    id: 15,
+    question: "What function is used to set the servo motor to a specific angle?",
+    options: [
+      "ServoDemo.move()",
+      "ServoDemo.rotate()",
+      "ServoDemo.write()",
+      "ServoDemo.setAngle()"
+    ],
+    correctAnswer: 2,
+    explanation: "Use ServoDemo.write() to set the angle. Lecture 25 @ 18:47."
+  }
+];
+
+
+
+
+        let selectedAnswers = {};
+        let submitted = false;
+
+        function createQuiz() {
+            const quizContainer = document.getElementById('quiz-container');
+            
+            questions.forEach(question => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                
+                questionCard.innerHTML = `
+                    <div class="question-text">Q${question.id}. ${question.question}</div>
+                    <div class="options-container">
+                        ${question.options.map((option, index) => `
+                            <label class="option" data-question="${question.id}" data-option="${index}">
+                                <input type="radio" name="question${question.id}" value="${index}">
+                                ${option}
+                            </label>
+                        `).join('')}
+                    </div>
+                    <div class="feedback" id="feedback-${question.id}">
+                        <div class="result-icon">
+                            <span class="icon"></span>
+                            <span class="result-text"></span>
+                        </div>
+                        <div class="explanation">${question.explanation}</div>
+                    </div>
+                `;
+                
+                quizContainer.appendChild(questionCard);
+            });
+
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', handleOptionSelect);
+            });
+
+            document.getElementById('submit-btn').addEventListener('click', handleSubmit);
+        }
+
+        function handleOptionSelect(event) {
+            if (submitted) return;
+
+            const questionId = parseInt(event.currentTarget.dataset.question);
+            const optionIndex = parseInt(event.currentTarget.dataset.option);
+
+            selectedAnswers[questionId] = optionIndex;
+
+            const questionOptions = document.querySelectorAll(`.option[data-question="${questionId}"]`);
+            questionOptions.forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+
+            const radioButton = event.currentTarget.querySelector('input[type="radio"]');
+            radioButton.checked = true;
+        }
+
+        function handleSubmit() {
+            if (Object.keys(selectedAnswers).length < questions.length) {
+                alert("Please answer all questions before submitting!");
+                return;
+            }
+
+            submitted = true;
+            let score = 0;
+
+            questions.forEach(question => {
+                const isCorrect = selectedAnswers[question.id] === question.correctAnswer;
+                if (isCorrect) score++;
+
+                const feedback = document.getElementById(`feedback-${question.id}`);
+                feedback.classList.add('visible');
+
+                const resultIcon = feedback.querySelector('.result-icon');
+                const resultText = feedback.querySelector('.result-text');
+                
+                if (isCorrect) {
+                    resultIcon.classList.add('correct');
+                    resultText.textContent = 'Correct Answer +1';
+                } else {
+                    resultIcon.classList.add('wrong');
+                    resultText.textContent = 'Wrong Answer +0';
+                }
+
+                const options = document.querySelectorAll(`.option[data-question="${question.id}"]`);
+                options.forEach((option, index) => {
+                    if (index === question.correctAnswer) {
+                        option.classList.add('correct');
+                    } else if (index === selectedAnswers[question.id]) {
+                        option.classList.add('wrong');
+                    }
+                });
+            });
+
+            document.getElementById('score').textContent = `Score: ${score}/${questions.length}`;
+
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.textContent = 'Try Again';
+            submitBtn.removeEventListener('click', handleSubmit);
+            submitBtn.addEventListener('click', resetQuiz);
+        }
+
+        function resetQuiz() {
+            location.reload();
+        }
+
+        createQuiz();
+    </script>
+</body>
+</html>
